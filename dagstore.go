@@ -230,7 +230,7 @@ func NewDAGStore(cfg Config) (*DAGStore, error) {
 		shards:              make(map[shard.Key]*Shard),
 		store:               cfg.Datastore,
 		externalCh:          make(chan *task, 128),     // len=128, concurrent external tasks that can be queued up before exercising backpressure.
-		internalCh:          make(chan *task, 1),       // len=1, because eventloop will only ever stage another internal event.
+		internalCh:          make(chan *task, 8),       // len=1, because eventloop will only ever stage another internal event.
 		completionCh:        make(chan *task, 64),      // len=64, hitting this limit will just make async tasks wait.
 		dispatchResultsCh:   make(chan *dispatch, 128), // len=128, same as externalCh.
 		gcCh:                make(chan chan *GCResult, 8),
