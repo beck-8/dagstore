@@ -45,9 +45,10 @@ func (d *DAGStore) control() {
 	var wg sync.WaitGroup
 	for i := 0; i < 8; i++ {
 		wg.Add(1)
-		go func() {
+		go func(num int) {
 			defer wg.Done()
 			for {
+				log.Infow("go routine", num)
 				// consume the next task or GC request; if we're shutting down, this method will error.
 				tsk, gc, err := d.consumeNext()
 				if err != nil {
@@ -347,7 +348,7 @@ func (d *DAGStore) control() {
 
 				s.lk.Unlock()
 			}
-		}()
+		}(i)
 	}
 	wg.Wait()
 }
